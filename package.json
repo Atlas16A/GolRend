@@ -42,6 +42,7 @@
     }
   },
   "dependencies": {
+    "bulma": "^0.9.3",
     "electron-log": "^4.4.6",
     "electron-squirrel-startup": "^1.0.0"
   },
