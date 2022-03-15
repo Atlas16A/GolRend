@@ -2,7 +2,9 @@ const { app, BrowserWindow } = require('electron');
 const path = require('path');
 // `````````````````````````````````````````````````````````
 const { execSync, exec, spawn } = require("child_process");
-var log = require('electron-log');
+const log = require('electron-log');
+log.transports.file.level = 'info';
+log.transports.file.resolvePath = () => __dirname + "/log.log";
 var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
 
 const Yagna_Source = path.join(path.dirname('golem-resources'))
@@ -35,19 +37,18 @@ const createWindow = () => {
   function Yagna_stat_pay () {
     setTimeout(function () {
       exec(Yagna_Status, Yagna_Pay, (error, stdout, stderr) => {
-      if (error) {
-        console.info(`exec error: ${error}`);
-        return;
-      }
-      console.info(`stdout: ${stdout}`);
-      console.info(`stderr: ${stderr}`);
-    })}, 5000);
-  }
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.error(`stderr: ${stderr}`);
+      }, 5000);
+    })
+  };
 
   //Start Yagna service
-  exec(Yagna_Start, {
-    stdio: ['ignore', out, err], detached: true
-    }).unref();
+  exec(Yagna_Start, {stdio: ['ignore', out, err], detached: true}).unref();
 
   //Check Yagna Payment status and set to sender mode
   Yagna_stat_pay
@@ -76,7 +77,7 @@ app.on('activate', () => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    exec('taskkill /IM "yagna.exe" /F');
+    exec('taskkill /IM "yagna.exe" /F'); // Ensures Yagna closes with app
     app.quit();
   }
 });
