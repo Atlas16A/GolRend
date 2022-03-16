@@ -8,10 +8,10 @@ log.transports.file.resolvePath = () => __dirname + "/log.log";
 var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
 
 const Yagna_Source = path.join(path.dirname('golem-resources'))
-const Yagna_EVN = ("set PATH=%PATH%;"+Yagna_Source, "set ELECTRON_ENABLE_LOGGING=1")
+const Yagna_EVN = ("set PATH=%PATH%;"+Yagna_Source, "set ELECTRON_ENABLE_LOGGING=true")
 var Yagna_Start=(Yagna_EVN, "yagna service run");
-var Yagna_Pay=("set YAGNA_APPKEY=2797bf88cb814986b047a9db79b99018", "yagna payment init --sender")
-var Yagna_Status=("yagna payment status")
+var Yagna_Pay=(Yagna_EVN, "set YAGNA_APPKEY=2797bf88cb814986b047a9db79b99018", "yagna payment init --sender")
+var Yagna_Status=(Yagna_EVN, "yagna payment status")
 //``````````````````````````````````````````````````````````
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -23,8 +23,15 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 675,
+    useContentSize: true,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true
+    }
   });
 
   // and load the index.html of the app.

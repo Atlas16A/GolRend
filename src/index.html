@@ -1,27 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html style = 'overflow-y:hidden'>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
-    />
-    <link rel="stylesheet" href="index.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GolRend</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script defer src="render.js"></script>
   </head>
-  <body class="content">
-    <h1>⚡ GolRend</h1>
-
-    <video></video>
-
-    <button id="startBtn" class="button is-primary">Start</button>
-    <button id="stopBtn" class="button is-warning">Stop</button>
-
-    <hr />
-
-    <button id="videoSelectBtn" class="button is-text">
-      Select .blend file
-    </button>
+  <body>
+    <div class="container">
+      <div class="has-background-black">
+        <section class="section is-medium">
+        <h1 class="has-text-white has-text-centered has-text-weight-bold is-size-1">GolRend</h1>
+        <h2 class="has-text-white subtitle has-text-centered">The Power Of The Golem Network Made Easy</h2>
+        </section>
+        <section class="section has-text-white pb-0">
+          <nav class="level">
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Wallet Address</p>
+                <p class="title">----</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">GLM Amount</p>
+                <p class="title">----</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Running Tasks</p>
+                <p class="title">----</p>
+              </div>
+            </div>
+          </nav>
+        </section>
+        <section class="section">
+          <div class="file is-boxed is-centered pt-3 pb-4">
+            <label class="file-label pr-2">
+              <input class="file-input" type="file" name="resume">
+              <span class="file-cta">
+                <span class="file-label">
+                  Choose a .blend file…
+                </span>
+              </span>
+            </label>
+            <label class="file-label pl-2">
+              <input class="file-input" type="file" name="resume">
+              <span class="file-cta">
+                <span class="file-label">
+                  Choose a Output…
+                </span>
+              </span>
+            </label>
+          </div>
+          <table class="table has-background-black level pb-5 pt-5">
+            <thead>
+              <tr>
+                <th colspan="2">
+                  <h2 class="has-text-white">
+                    Render Settings
+                  </h2>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+          <tr>
+            <td class="has-text-white">Resolution: -----------</td>
+            <td class="has-text-white">Compositing: ---------</td>
+            <td class="has-text-white">Samples: ------------</td>
+            <td class="has-text-white">Output Format: -----------</td>
+          </tr>
+        </tbody>
+      </table>
+      <button id="RenderStart" class="button is-large is-fullwidth is-centered pt-5 pb-5">Render Start</button>
+    </section>
+      </div>
+    </div>
   </body>
 </html>
