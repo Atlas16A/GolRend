@@ -1,17 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 // `````````````````````````````````````````````````````````
-const { execSync, exec, spawn } = require("child_process");
-const log = require('electron-log');
-log.transports.file.level = 'info';
-log.transports.file.resolvePath = () => __dirname + "/log.log";
-var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
-
+const { exec, spawn } = require("child_process");
 const Yagna_Source = path.join(path.dirname('golem-resources'))
-const Yagna_EVN = ("set PATH=%PATH%;"+Yagna_Source, "set ELECTRON_ENABLE_LOGGING=true")
-var Yagna_Start=(Yagna_EVN, "yagna service run");
-var Yagna_Pay=(Yagna_EVN, "set YAGNA_APPKEY=2797bf88cb814986b047a9db79b99018", "yagna payment init --sender")
-var Yagna_Status=(Yagna_EVN, "yagna payment status")
 //``````````````````````````````````````````````````````````
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -39,26 +30,93 @@ const createWindow = () => {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
-  
-  //Function to give time for Yagna to fully start
-  function Yagna_stat_pay () {
-    setTimeout(function () {
-      exec(Yagna_Status, Yagna_Pay, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-        console.error(`stderr: ${stderr}`);
-      }, 5000);
-    })
-  };
 
   //Start Yagna service
-  exec(Yagna_Start, {stdio: ['ignore', out, err], detached: true}).unref();
+  const Yagna_Start = spawn('yagna', ['service', 'run'], {
+    stdio: ['ignore', out, err], 
+    detached: true,
+    env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true })
+  }).unref();
+  
+  //Function to give time for Yagna to fully start
+  setTimeout(function(){
+    //Pulls Key from Yagna
+    const Yagna_getAPPKEY = exec('yagna app-key list --json | jq -r .values[0]', {
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true })
+    })
+  
+    Yagna_getAPPKEY.stdout.on('data', (data) => {
+      console.log(`Key Get: ${data}`);
+    });
+    
+    Yagna_getAPPKEY.stderr.on('data', (data) => {
+      console.error(`Key Get: ${data}`);
+    });
 
-  //Check Yagna Payment status and set to sender mode
-  Yagna_stat_pay
+    Yagna_getAPPKEY.on('close', (code) => {
+      console.log(`Key Get process exited with code ${code}`);
+    });
+
+    //Get public key
+    const Yagna_getpublic = exec('yagna id show', {
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+    })
+
+    Yagna_getpublic.stdout.on('data', (data) => {
+      console.log(`Public Key: ${data}`);
+    });
+
+    function streamToString(stream, cb) {
+      const chunks = [];
+      stream.on('data', (chunk) => {
+        chunks.push(chunk.toString());
+      });
+      stream.on('end', () => {
+        cb(chunks.join(''));
+      });
+    };
+    
+    streamToString(Yagna_getpublic.stdout, (data) => {
+      console.log(data);  // data is now my string variable
+      console.log(`Public Address:`+data.slice(66, -3));
+      const Public_Address = data;
+    });
+
+    //yagna payment status
+    const Yagna_Stat_check = exec('yagna payment status', {
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+    })
+  
+    Yagna_Stat_check.stdout.on('data', (data) => {
+      console.log(`Status Check: ${data}`);
+    });
+    
+    Yagna_Stat_check.stderr.on('data', (data) => {
+      console.error(`Status Check error: ${data}`);
+    });
+    
+    Yagna_Stat_check.on('close', (code) => {
+      console.log(`Status Check process exited with code ${code}`);
+    });
+
+    //set yagna payment mode to sender
+    const Yagna_pay_mode = exec('yagna payment init --sender', {
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+    })
+  
+    Yagna_pay_mode.stdout.on('data', (data) => {
+      console.log(`Sender mode: ${data}`);
+    });
+    
+    Yagna_pay_mode.stderr.on('data', (data) => {
+      console.error(`Sender mode error: ${data}`);
+    });
+    
+    Yagna_pay_mode.on('close', (code) => {
+      console.log(`Sender mode process exited with code ${code}`);
+    });
+  }, 5000);
+
 };
 
 // This method will be called when Electron has finished
