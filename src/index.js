@@ -1,7 +1,12 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents } = require('electron');
 const path = require('path');
 // `````````````````````````````````````````````````````````
-const { exec, spawn } = require("child_process");
+const { execSync, exec, spawn } = require("child_process");
+const log = require('electron-log');
+log.transports.file.level = 'info';
+log.transports.file.resolvePath = () => __dirname + "/log.log";
+var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
+
 const Yagna_Source = path.join(path.dirname('golem-resources'))
 //``````````````````````````````````````````````````````````
 
@@ -12,21 +17,47 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
+  
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    show: false,
     width: 1000,
     height: 675,
     useContentSize: true,
     resizable: false,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true
+      contextIsolation: true,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  //mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  //Load Loading screen
+  mainWindow.loadFile(path.join(__dirname, 'index.html'))
+  mainWindow.center();
+
+  var splash = new BrowserWindow({
+    transparent: false, 
+    frame: false, 
+    alwaysOnTop: true,
+    width: 1000,
+    height: 675,
+    useContentSize: true,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
+
+  splash.loadFile(path.join(__dirname, 'loading.html'));
+  splash.center();
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
@@ -79,7 +110,10 @@ const createWindow = () => {
     streamToString(Yagna_getpublic.stdout, (data) => {
       console.log(data);  // data is now my string variable
       console.log(`Public Address:`+data.slice(66, -3));
-      const Public_Address = data;
+      const Public_Address = data.slice(66, -3);
+
+      //Sends public address to renderer
+      mainWindow.webContents.send('Public_Address_Send', Public_Address)
     });
 
     //yagna payment status
@@ -115,6 +149,17 @@ const createWindow = () => {
     Yagna_pay_mode.on('close', (code) => {
       console.log(`Sender mode process exited with code ${code}`);
     });
+
+    // and load the index.html of the app.
+    //mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+
+    splash.close();
+    mainWindow.center();
+    mainWindow.show();
+
   }, 5000);
 
 };
@@ -122,7 +167,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready',createWindow);
+app.on('ready', createWindow);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
