@@ -7,24 +7,28 @@ log.transports.file.level = 'info';
 log.transports.file.resolvePath = () => __dirname + "/log.log";
 var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
 
-const Yagna_Source = path.join(path.dirname('golem-resources'))
+const Yagna_Source = path.join(path.dirname('golem-resources'));
 //``````````````````````````````````````````````````````````
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
-}
+};
 
 const createWindow = () => {
   
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    frame: true,
+    icon: path.join(__dirname, 'GolrendLogo.ico'),
+    backgroundColor: '#000000',
     show: false,
     width: 1000,
     height: 675,
     useContentSize: true,
     resizable: false,
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -33,14 +37,12 @@ const createWindow = () => {
     }
   });
 
-  // and load the index.html of the app.
-  //mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
   //Load Loading screen
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
   mainWindow.center();
 
   var splash = new BrowserWindow({
+    icon: path.join(__dirname, 'GolrendLogo.ico'),
     transparent: false, 
     frame: false, 
     alwaysOnTop: true,
@@ -150,12 +152,6 @@ const createWindow = () => {
       console.log(`Sender mode process exited with code ${code}`);
     });
 
-    // and load the index.html of the app.
-    //mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
-
     splash.close();
     mainWindow.center();
     mainWindow.show();
@@ -191,3 +187,4 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
