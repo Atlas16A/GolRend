@@ -20,13 +20,14 @@ const createWindow = () => {
   
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    frame: true,
+    frame: false,
     icon: path.join(__dirname, 'GolrendLogo.ico'),
     backgroundColor: '#000000',
     show: false,
     width: 1000,
     height: 675,
     useContentSize: true,
+    transparent: false,
     resizable: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -119,12 +120,18 @@ const createWindow = () => {
     });
 
     //yagna payment status
-    const Yagna_Stat_check = exec('yagna payment status', {
+    const Yagna_Stat_check = exec('yagna payment status --json', {
       env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
     })
   
     Yagna_Stat_check.stdout.on('data', (data) => {
       console.log(`Status Check: ${data}`);
+      const totalamount = JSON.parse(data);
+      console.log(totalamount.amount);
+      const GLM_Total = totalamount.amount;
+
+      //Sends Total GLM amount to renderer
+      mainWindow.webContents.send('Total_Amount_Send', GLM_Total);
     });
     
     Yagna_Stat_check.stderr.on('data', (data) => {
@@ -158,6 +165,14 @@ const createWindow = () => {
 
   }, 5000);
 
+  ipcMain.on("close_app", () => {
+    app.quit();
+  });
+  
+  ipcMain.on("minimize_app", () => {
+    mainWindow.minimize();
+  });
+
 };
 
 // This method will be called when Electron has finished
@@ -187,4 +202,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-

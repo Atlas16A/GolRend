@@ -45,10 +45,8 @@
     "@maticnetwork/maticjs": "^3.2.4",
     "@maticnetwork/maticjs-web3": "^1.0.1",
     "bulma": "^0.9.3",
-    "custom-electron-titlebar": "^4.1.0",
     "electron-log": "^4.4.6",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-titlebar": "0.0.3",
     "web3": "^1.7.1"
   },
   "devDependencies": {

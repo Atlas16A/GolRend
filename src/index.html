@@ -1,82 +1,96 @@
 <!DOCTYPE html>
-<html style = 'overflow-y:hidden'>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>GolRend</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <script defer src="render.js"></script>
-  </head>
-  <body class="has-background-black">
-    <div class="container">
-      <div class="has-background-black">
-        <section class="section is-medium">
+<html style='overflow-y:hidden'>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GolRend</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <script defer src="render.js"></script>
+</head>
+
+<body class="has-background-black">
+  <div class="container">
+    <nav>
+      <div class="left-nav">
+        <span class="nav-link" id="nav-menu">&#x2630;</span>
+        <span class="nav-link-nohover">Golrend</span>
+      </div>
+      <div class="right-nav">
+        <span class="nav-link" id="app/minimize">&minus;</span>
+        <span class="nav-link" id="app/close">&#10006;</span>
+      </div>
+    </nav>
+    <div class="has-background-black">
+      <section class="section is-medium">
         <h1 class="has-text-white has-text-centered has-text-weight-bold is-size-1">GolRend</h1>
         <h2 class="has-text-white subtitle has-text-centered">The Power Of The Golem Network Made Easy</h2>
-        </section>
-        <section class="section has-text-white pb-0">
-          <div class="level columns is-desktop">
-            <div class="level-item has-text-centered column">
-              <div>
-                <p class="heading">Wallet Address</p>
-                <p id="Public_Address" class="title is-5 is-flex-wrap-wrap">----</p>
-              </div>
-            </div>
-            <div class="level-item has-text-centered column">
-              <div>
-                <p class="heading">GLM Amount</p>
-                <p id="GLM_Amount" class="title is-5 is-flex-wrap-wrap">----</p>
-              </div>
-            </div>
-            <div class="level-item has-text-centered column">
-              <div>
-                <p class="heading">Running Tasks</p>
-                <p id="Running_Tasks" class="title is-5 is-flex-wrap-wrap">----</p>
-              </div>
+      </section>
+      <section class="section has-text-white pb-0">
+        <div class="level columns is-desktop">
+          <div class="level-item has-text-centered column">
+            <div>
+              <p class="heading">Wallet Address</p>
+              <p id="Public_Address" class="title is-5 is-flex-wrap-wrap">----</p>
             </div>
           </div>
-        </section>
-        <section class="section">
-          <div class="file is-boxed is-centered pt-3 pb-4">
-            <label class="file-label pr-2">
-              <input class="file-input" type="file" name="resume">
-              <span class="file-cta">
-                <span class="file-label">
-                  Choose a .blend file…
-                </span>
-              </span>
-            </label>
-            <label class="file-label pl-2">
-              <input class="file-input" type="file" name="resume">
-              <span class="file-cta">
-                <span class="file-label">
-                  Choose a Output…
-                </span>
-              </span>
-            </label>
+          <div class="level-item has-text-centered column">
+            <div>
+              <p class="heading">GLM Amount</p>
+              <p id="GLM_Amount" class="title is-5 is-flex-wrap-wrap">----</p>
+            </div>
           </div>
-          <table class="table has-background-black level pb-5 pt-5">
-            <thead>
-              <tr>
-                <th colspan="2">
-                  <h2 class="has-text-white">
-                    Render Settings
-                  </h2>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-          <tr>
-            <td class="has-text-white">Resolution: -----------</td>
-            <td class="has-text-white">Compositing: ---------</td>
-            <td class="has-text-white">Samples: ------------</td>
-            <td class="has-text-white">Output Format: -----------</td>
-          </tr>
-        </tbody>
-      </table>
-      <button id="RenderStart" class="button is-large is-fullwidth is-centered pt-5 pb-5">Render Start</button>
-    </section>
-      </div>
+          <div class="level-item has-text-centered column">
+            <div>
+              <p class="heading">Running Tasks</p>
+              <p id="Running_Tasks" class="title is-5 is-flex-wrap-wrap">----</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <div class="file is-boxed is-centered pt-3 pb-4">
+          <label class="file-label pr-2">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+              <span class="file-label">
+                Choose a .blend file…
+              </span>
+            </span>
+          </label>
+          <label class="file-label pl-2">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+              <span class="file-label">
+                Choose a Output…
+              </span>
+            </span>
+          </label>
+        </div>
+        <table class="table has-background-black level pb-5 pt-5">
+          <thead>
+            <tr>
+              <th colspan="2">
+                <h2 class="has-text-white">
+                  Render Settings
+                </h2>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="has-text-white">Resolution: -----------</td>
+              <td class="has-text-white">Compositing: ---------</td>
+              <td class="has-text-white">Samples: ------------</td>
+              <td class="has-text-white">Output Format: -----------</td>
+            </tr>
+          </tbody>
+        </table>
+        <button id="RenderStart" class="button is-large is-fullwidth is-centered pt-5 pb-5">Render Start</button>
+      </section>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
