@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents, dialog } = require('electron');
 const path = require('path');
 // `````````````````````````````````````````````````````````
 const { execSync, exec, spawn } = require("child_process");
@@ -7,7 +7,9 @@ log.transports.file.level = 'info';
 log.transports.file.resolvePath = () => __dirname + "/log.log";
 var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('./out.log', 'a');
 
-const Yagna_Source = path.join(path.dirname('golem-resources'));
+const Yagna_Source = path.join(__dirname, '/golem-resources');
+let Render_Input;
+let Render_Output;
 //``````````````````````````````````````````````````````````
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -25,9 +27,9 @@ const createWindow = () => {
     backgroundColor: '#000000',
     show: false,
     width: 1000,
-    height: 675,
+    height: 700,
     useContentSize: true,
-    transparent: false,
+    transparent: true,
     resizable: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -48,9 +50,10 @@ const createWindow = () => {
     frame: false, 
     alwaysOnTop: true,
     width: 1000,
-    height: 675,
-    useContentSize: true,
+    height: 700,
+    useContentSize: false,
     resizable: false,
+    fullscreenable: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
@@ -64,7 +67,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
-
+  console.log(Yagna_Source);
   //Start Yagna service
   const Yagna_Start = spawn('yagna', ['service', 'run'], {
     stdio: ['ignore', out, err], 
@@ -75,7 +78,7 @@ const createWindow = () => {
   //Function to give time for Yagna to fully start
   setTimeout(function(){
     //Pulls Key from Yagna
-    const Yagna_getAPPKEY = exec('yagna app-key list --json | jq -r .values[0]', {
+    const Yagna_getAPPKEY = exec(('yagna app-key list --json | ' + path.join(Yagna_Source, "jq.exe") + ' -r .values[0]'), {
       env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true })
     })
   
@@ -93,7 +96,7 @@ const createWindow = () => {
 
     //Get public key
     const Yagna_getpublic = exec('yagna id show', {
-      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | ` + path.join(Yagna_Source, "jq.exe") + ` -r .values[0])` })
     })
 
     Yagna_getpublic.stdout.on('data', (data) => {
@@ -111,7 +114,6 @@ const createWindow = () => {
     };
     
     streamToString(Yagna_getpublic.stdout, (data) => {
-      console.log(data);  // data is now my string variable
       console.log(`Public Address:`+data.slice(66, -3));
       const Public_Address = data.slice(66, -3);
 
@@ -121,7 +123,7 @@ const createWindow = () => {
 
     //yagna payment status
     const Yagna_Stat_check = exec('yagna payment status --json', {
-      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | ` + path.join(Yagna_Source, "jq.exe") + ` -r .values[0])` })
     })
   
     Yagna_Stat_check.stdout.on('data', (data) => {
@@ -144,7 +146,7 @@ const createWindow = () => {
 
     //set yagna payment mode to sender
     const Yagna_pay_mode = exec('yagna payment init --sender', {
-      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | jq -r .values[0])` })
+      env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true }, { YAGNA_APPKEY: `$(yagna app-key list --json | ` + path.join(Yagna_Source, "jq.exe") + ` -r .values[0])` })
     })
   
     Yagna_pay_mode.stdout.on('data', (data) => {
@@ -173,6 +175,38 @@ const createWindow = () => {
     mainWindow.minimize();
   });
 
+  ipcMain.on("render_start", () => {
+    mainWindow.minimize();
+  });
+
+  ipcMain.on("blend_input", () => {
+    //mainWindow.minimize();
+    dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [
+        { name: 'Blender File', extensions: ['blend'] },
+      ]
+    }).then(result => {
+      console.log(result.canceled)
+      console.log(result.filePaths)
+      Render_Input = (result.filePaths);
+    }).catch(err => {
+      console.log(err)
+    })
+  });
+
+  ipcMain.on("blend_output", () => {
+    //mainWindow.minimize();
+    dialog.showOpenDialog(mainWindow, {
+      properties: ['openDirectory']
+    }).then(result => {
+      console.log(result.canceled)
+      console.log(result.filePaths)
+      Render_Output = (result.filePaths);
+    }).catch(err => {
+      console.log(err)
+    })
+  });
 };
 
 // This method will be called when Electron has finished
