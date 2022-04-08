@@ -1,0 +1,232 @@
+::-webkit-scrollbar {
+    display: none;
+    overflow-y: hidden;
+  }
+
+.titlebar-button {
+    -webkit-app-region: no-drag;
+    padding: 17px;
+    padding-top: 5px;
+    padding-bottom: 9px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    border-radius: 7px;
+}
+  
+  .titlebar-button:hover {
+    background-color: azure;
+}
+  
+  .titlebar-title {
+    -webkit-app-region: no-drag;
+    padding: 17px;
+    font-size: 1.5rem;
+}
+
+.mainspace {  display: grid;
+    grid-template-columns: 10vw 80vw 10vw;
+    grid-template-rows: 7vh 20vh 15vh 20vh 20vh 15vh 3vh;
+    gap: 0px 0px;
+    grid-auto-flow: column;
+    grid-template-areas:
+      "titlebar titlebar titlebar"
+      ". titlearea ."
+      ". Buttons ."
+      ". StatusInfo ."
+      ". RenderSettings ."
+      ". Render ."
+      ". . .";
+  }
+  
+  .titlebar {  display: grid;
+    grid-template-columns: 6vw 82vw 6vw 6vw;
+    grid-template-rows: 100%;
+    gap: 0px 0px;
+    grid-auto-flow: column;
+    justify-content: center;
+    align-items: center;
+    grid-template-areas:
+      "Menu Title Min Close";
+    justify-self: stretch;
+    grid-area: titlebar;
+    user-select: none;
+    -webkit-app-region: drag;
+  }
+  
+  .Menu {
+    justify-self: center;
+    align-self: center;
+    grid-area: Menu;
+  }
+  
+  .Title {
+    justify-self: start;
+    align-self: center;
+    grid-area: Title;
+  }
+  
+  .Min {
+    justify-self: center;
+    align-self: center;
+    grid-area: Min;
+  }
+  
+  .Close {
+    justify-self: center;
+    align-self: center;
+    grid-area: Close;
+  }
+  
+  .titlearea {
+    justify-self: center;
+    align-self: center;
+    grid-area: titlearea;
+  }
+  
+  .Buttons {  display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr;
+    grid-auto-columns: 1fr;
+    gap: 20px 20px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "BlendSelect OutputSelect";
+    grid-area: Buttons;
+  }
+  
+  .BlendSelect {
+    justify-self: center;
+    align-self: center;
+    grid-area: BlendSelect;
+  }
+  
+  .OutputSelect {
+    justify-self: center;
+    align-self: center;
+    grid-area: OutputSelect;
+  }
+  
+  .RenderSettings {  display: grid;
+    grid-template-columns: 1.6fr 0.1fr 1.1fr 1.1fr 1.1fr 1.1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 30px;
+    grid-auto-flow: row;
+    justify-content: space-around;
+    justify-items: center;
+    align-items: center;
+    grid-template-areas:
+      "RenderSettingsSub . Res Comp Samp OutForm";
+    grid-area: RenderSettings;
+  }
+  
+  .RenderSettingsSub { grid-area: RenderSettingsSub; }
+  
+  .Res { grid-area: Res; }
+  
+  .Comp { grid-area: Comp; }
+  
+  .Samp { grid-area: Samp; }
+  
+  .OutForm { grid-area: OutForm; }
+  
+  .Render {
+    justify-self: stretch;
+    align-self: center;
+    grid-area: Render;
+  }
+  
+  .StatusInfo {  display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    justify-content: space-around;
+    justify-items: center;
+    align-items: center;
+    grid-template-areas:
+      "PubAddress AMT RunningTasks Market";
+    grid-area: StatusInfo;
+  }
+  
+  .PubAddress { grid-area: PubAddress; }
+  
+  .AMT {  display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    justify-content: space-around;
+    justify-items: center;
+    align-items: center;
+    grid-template-areas:
+      "GLM"
+      "USD"
+      "Payed";
+    grid-area: AMT;
+  }
+  
+  .GLM { grid-area: GLM; }
+  
+  .USD { grid-area: USD; }
+  
+  .Payed { grid-area: Payed; }
+  
+  .RunningTasks { grid-area: RunningTasks; }
+  
+  .Market { grid-area: Market; }
+  
+  .lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: rgb(255, 0, 0);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(24px, 0);
+    }
+  }

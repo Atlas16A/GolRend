@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, webContents, dialog, systemPreferences } = require('electron');
 const path = require('path');
 // `````````````````````````````````````````````````````````
 const { execSync, exec, spawn } = require("child_process");
@@ -10,6 +10,7 @@ var fs = require('fs'), out = fs.openSync('./out.log', 'a'), err = fs.openSync('
 const Yagna_Source = path.join(__dirname, '/golem-resources');
 let Render_Input;
 let Render_Output;
+let Yagna_Start;
 //``````````````````````````````````````````````````````````
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -24,12 +25,11 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     frame: false,
     icon: path.join(__dirname, 'GolrendLogo.ico'),
-    backgroundColor: '#000000',
     show: false,
     width: 1000,
     height: 700,
     useContentSize: true,
-    transparent: true,
+    transparent: false,
     resizable: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -41,12 +41,13 @@ const createWindow = () => {
   });
 
   //Load Loading screen
-  mainWindow.loadFile(path.join(__dirname, 'index.html'))
+  mainWindow.loadFile(path.join(__dirname, 'remakeindex.html'));
+  mainWindow.setBackgroundColor('#ff000000');
   mainWindow.center();
 
   var splash = new BrowserWindow({
     icon: path.join(__dirname, 'GolrendLogo.ico'),
-    transparent: false, 
+    transparent: true, 
     frame: false, 
     alwaysOnTop: true,
     width: 1000,
@@ -69,11 +70,12 @@ const createWindow = () => {
   //mainWindow.webContents.openDevTools();
   console.log(Yagna_Source);
   //Start Yagna service
-  const Yagna_Start = spawn('yagna', ['service', 'run'], {
-    stdio: ['ignore', out, err], 
-    detached: true,
+  let Yagna_Start = spawn('yagna', ['service', 'run'], {
+    //stdio: ['ignore', out, err], 
+    //detached: true,
     env: ({ PATH: Yagna_Source }, { ELECTRON_ENABLE_LOGGING: true })
-  }).unref();
+  });
+  //}).unref();
   
   //Function to give time for Yagna to fully start
   setTimeout(function(){
@@ -165,7 +167,7 @@ const createWindow = () => {
     mainWindow.center();
     mainWindow.show();
 
-  }, 5000);
+  }, 6000);
 
   ipcMain.on("close_app", () => {
     app.quit();
@@ -181,6 +183,7 @@ const createWindow = () => {
 
   ipcMain.on("blend_input", () => {
     //mainWindow.minimize();
+    //open blend file
     dialog.showOpenDialog(mainWindow, {
       properties: ['openFile'],
       filters: [
@@ -197,6 +200,7 @@ const createWindow = () => {
 
   ipcMain.on("blend_output", () => {
     //mainWindow.minimize();
+    //open dialog to select output file
     dialog.showOpenDialog(mainWindow, {
       properties: ['openDirectory']
     }).then(result => {
@@ -207,12 +211,49 @@ const createWindow = () => {
       console.log(err)
     })
   });
+
+  var menu = new BrowserWindow({
+    show: false,
+    icon: path.join(__dirname, 'GolrendLogo.ico'),
+    transparent: true, 
+    frame: false,
+    width: 1000/3.5,
+    height: 600,
+    useContentSize: false,
+    resizable: false,
+    fullscreenable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: true,
+      enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
+
+  menu.loadFile(path.join(__dirname, 'menu.html'));
+  menu.center();
+  
+  //update menu height to equal that of menu.html content height
+  //ipcMain.on("menu_size", (size) => {
+    //console.log(size);
+    //menu.setSize(1000/3.5, size);
+  //});
+
+  ipcMain.on("menu_open", () => {
+    //on click of html item open menu
+    menu.show();
+  });
+
+  ipcMain.on("menu_close", () => {
+    menu.hide();
+  });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+//app.on('ready', createWindow);
+app.on('ready', () => setTimeout(createWindow, 300));
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -231,8 +272,8 @@ app.on('activate', () => {
 
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    exec('taskkill /IM "yagna.exe" /F'); // Ensures Yagna closes with app
-    app.quit();
-  }
+  //Close program with name yagna.exe on windows
+  Yagna_Start.kill('SIGTERM'); // Ensures Yagna closes with app
+  app.quit();
 });
+

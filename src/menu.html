@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GolRend</title>
+    <script defer src="menu.js"></script>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+
+<body class="has-background-grey-light" id="menu_body">
+    <div class="has-background-grey-light">
+        <div class="section">
+            <form action="index.php" method="post">
+                <div class="field">
+                    <label class="label">Enter address</label>
+                    <div class="control">
+                        <input class="input" type="text" name="public_address" placeholder="Public Address">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Enter GLM Amount</label>
+                    <div class="control">
+                        <input class="input" type="text" name="GLM_Amount_Send" placeholder="GLM">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-link" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

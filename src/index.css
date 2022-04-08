@@ -2,6 +2,11 @@
 
 ::-webkit-scrollbar {
   display: none;
+  overflow-y: hidden;
+}
+
+body {
+  border-radius: 17px;
 }
 
 nav {
@@ -12,6 +17,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 7px;
 }
 
 .nav-link {

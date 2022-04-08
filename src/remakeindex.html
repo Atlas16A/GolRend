@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GolRend</title>
+    <link rel="stylesheet" href="remakeindex.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script defer src="render.js"></script>
+</head>
+<body>
+    <div class="mainspace has-background-black">
+        <div class="titlebar">
+            <div class="Menu">
+                <span class="titlebar-button" id="menu">&#x2630;</span>
+            </div>
+            <div class="Title">
+                <span class="titlebar-title">GolRend</span>
+            </div>
+            <div class="Min"><span class="titlebar-button" id="app_minimize">&minus;</span></div>
+            <div class="Close"><span class="titlebar-button" id="app/close">&#10006;</span></div>
+        </div>
+        <div class="titlearea">
+            <h1 class="title has-text-white has-text-centered has-text-weight-bold is-size-1">GolRend</h1>
+            <h2 class="subtitle has-text-white subtitle has-text-centered">The Power Of The Golem Network Made Easy</h2>
+        </div>
+        <div class="Buttons">
+          <div class="BlendSelect">
+            <label id="blendinput" class="file-label pr-2">
+                <span id="blendinput" class="file-cta">
+                  <span class="file-label">
+                    Choose a .blend file…
+                  </span>
+                </span>
+            </label>
+          </div>
+          <div class="OutputSelect">
+            <label id="blendoutput" class="file-label pl-2">
+                <span id="blendoutput" class="file-cta">
+                  <span class="file-label">
+                    Choose a Output…
+                  </span>
+                </span>
+            </label>
+          </div>
+        </div>
+        <div class="RenderSettings">
+          <div class="RenderSettingsSub">
+            <h2 class="has-text-white">
+                Render Settings
+            </h2>
+          </div>
+          <div class="Res">
+            <h3 class="has-text-white">Resolution: -----------</h3>
+          </div>
+          <div class="Comp">
+            <h3 class="has-text-white">Compositing: ---------</h3>
+          </div>
+          <div class="Samp">
+            <h3 class="has-text-white">Samples: ------------</h3>
+          </div>
+          <div class="OutForm">
+            <h3 class="has-text-white">Output Format: ----------</h3>
+          </div>
+        </div>
+        <div class="Render">
+            <button id="RenderStart" class="button is-large is-fullwidth is-centered pt-5 pb-5">Render Start</button>
+        </div>
+        <div class="StatusInfo">
+          <div class="PubAddress has-text-centered">
+            <p class="heading">Wallet Address</p>
+            <p id="Public_Address" class="title is-5 is-flex-wrap-wrap">----</p>
+          </div>
+          <div class="AMT">
+            <div class="GLM has-text-centered">
+                <p class="heading">GLM Amount</p>
+                <p id="GLM_Amount" class="title is-5 is-flex-wrap-wrap">----</p>
+            </div>
+            <div class="USD has-text-centered">
+                <p class="heading">USD Value</p>
+                <p id="USD_Value" class="title is-5 is-flex-wrap-wrap">----</p>
+            </div>
+            <div class="Payed has-text-centered">
+                <p class="heading">Payed</p>
+                <p id="Payed" class="title is-5 is-flex-wrap-wrap">----</p>
+            </div>
+          </div>
+          <div class="RunningTasks has-text-centered">
+            <p class="heading">Running Tasks</p>
+            <p id="Running_Tasks" class="title is-5 is-flex-wrap-wrap">----</p>
+          </div>
+          <div class="Market has-text-centered">
+            <p class="heading">Avg. Market Price</p>
+            <p id="Market" class="title is-5 is-flex-wrap-wrap">----</p>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
